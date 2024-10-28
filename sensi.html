@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Configuração FF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Fundo preto */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .panel-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #000; /* Fundo preto */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .tab-button {
+            background-color: #8A2BE2; /* Roxo */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .tab-button.active {
+            background-color: #FF4500; /* Laranja */
+        }
+
+        .tab-content-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .config-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #8A2BE2; /* Roxo */
+        }
+
+        .config-section input[type="range"],
+        .config-section input[type="number"] {
+            width: 100%;
+        }
+
+        .config-section span {
+            display: block;
+            text-align: right;
+            font-size: 14px;
+            margin-top: 5px;
+            color: #8A2BE2; /* Roxo */
+        }
+
+        .dpi-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .dpi-button {
+            background-color: #8A2BE2; /* Roxo */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .dpi-button.active {
+            background-color: #FF4500; /* Laranja */
+        }
+    </style>
+</head>
+<body>
+    <script src="js/app.js"></script>
+    <div class="panel-container">
+        <!-- Abas laterais -->
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('configTab')">Configurações</button>
+            <button class="tab-button" onclick="showTab('securityTab')">Segurança</button>
+            <button class="tab-button" onclick="showTab('dpiTab')">DPI</button>
+        </div>
+
+        <!-- Conteúdo das abas -->
+        <div class="tab-content-container">
+            <div id="configTab" class="tab-content active">
+                <div class="config-section">
+                    <label for="sensiGeral">Sensibilidade Geral</label>
+                    <input type="range" id="sensiGeral" min="0" max="200" value="100" oninput="updateValue('sensiGeral', 'sensiGeralValue')">
+                    <span id="sensiGeralValue">100</span>
+                </div>
+                <div class="config-section">
+                    <label for="sensiRedDot">Ponto Vermelho</label>
+                    <input type="range" id="sensiRedDot" min="0" max="200" value="100" oninput="updateValue('sensiRedDot', 'sensiRedDotValue')">
+                    <span id="sensiRedDotValue">100</span>
+                </div>
+                <div class="config-section">
+                    <label for="sensi2x">2x</label>
+                    <input type="range" id="sensi2x" min="0" max="200" value="100" oninput="updateValue('sensi2x', 'sensi2xValue')">
+                    <span id="sensi2xValue">100</span>
+                </div>
+                <div class="config-section">
+                    <label for="sensi4x">4x</label>
+                    <input type="range" id="sensi4x" min="0" max="200" value="100" oninput="updateValue('sensi4x', 'sensi4xValue')">
+                    <span id="sensi4xValue">100</span>
+                </div>
+                <div class="config-section">
+                    <label for="sensiAWM">AWM</label>
+                    <input type="range" id="sensiAWM" min="0" max="200" value="100" oninput="updateValue('sensiAWM', 'sensiAWMValue')">
+                    <span id="sensiAWMValue">100</span>
+                </div>
+                <div class="config-section">
+                    <label for="sensiOlhadinha">Olhadinha</label>
+                    <input type="range" id="sensiOlhadinha" min="0" max="200" value="100" oninput="updateValue('sensiOlhadinha', 'sensiOlhadinhaValue')">
+                    <span id="sensiOlhadinhaValue">100</span>
+                </div>
+            </div>
+
+            <div id="securityTab" class="tab-content">
+                <div class="config-section">
+                    <label>Aimlock</label>
+                    <button class="dpi-button" onclick="toggleProtection('aimlockBtn')">Desativado</button>
+                </div>
+                <!-- Outros métodos de proteção... -->
+            </div>
+
+            <div id="dpiTab" class="tab-content">
+                <div class="config-section">
+                    <label>Escolha o DPI</label>
+                    <div class="dpi-options">
+                        <button class="dpi-button" onclick="setDPI(889)">DPI 889</button>
+                        <button class="dpi-button" onclick="setDPI(700)">DPI 700</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function updateValue(id, outputId) {
+            const input = document.getElementById(id);
+            const output = document.getElementById(outputId);
+            output.textContent = input.value;
+        }
+
+        function setDPI(dpiValue) {
+            alert("DPI definido para: " + dpiValue);
+            const buttons = document.querySelectorAll('.dpi-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            const activeButton = [...buttons].find(button => button.textContent.includes(dpiValue));
+            if (activeButton) activeButton.classList.add('active');
+        }
+
+        function toggleProtection(protection) {
+            const aimlockBtn = document.querySelector('.dpi-button');
+            if (aimlockBtn.classList.contains('active')) {
+                aimlockBtn.classList.remove('active');
+                aimlockBtn.textContent = "Desativado";
+            } else {
+                aimlockBtn.classList.add('active');
+                aimlockBtn.textContent = "Ativado";
+            }
+        }
+     
+    </script>
+</body>
+</html>
